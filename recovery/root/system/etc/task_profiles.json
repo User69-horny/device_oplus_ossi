@@ -16,6 +16,11 @@
       "File": "top-app/cpus"
     },
     {
+      "Name": "AudioAppCapacityCPUs",
+      "Controller": "cpuset",
+      "File": "audio-app/cpus"
+    },
+    {
       "Name": "MemStats",
       "Controller": "memory",
       "File": "memory.stat"
@@ -76,9 +81,26 @@
       "Name": "FreezerState",
       "Controller": "freezer",
       "File": "cgroup.freeze"
+    },
+    {
+      "Name": "BfqWeight",
+      "Controller": "io",
+      "File": "blkio.bfq.weight",
+      "FileV2": "io.bfq.weight"
+    },
+    {
+      "Name": "CfqGroupIdle",
+      "Controller": "io",
+      "File": "blkio.group_idle",
+      "FileV2": "io.group_idle"
+    },
+    {
+      "Name": "CfqWeight",
+      "Controller": "io",
+      "File": "blkio.weight",
+      "FileV2": "io.weight"
     }
   ],
-
   "Profiles": [
     {
       "Name": "HighEnergySaving",
@@ -171,21 +193,6 @@
         }
       ]
     },
-// MIUI ADD: Performance_SpeedUI
-    {
-      "Name": "UiPerformance",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpu",
-            "Path": "ui"
-          }
-        }
-      ]
-    },
-// END Performance_SpeedUI
     {
       "Name": "RealtimePerformance",
       "Actions": [
@@ -212,41 +219,16 @@
         }
       ]
     },
+
     {
-      "Name": "CameraProcessCapacityLow",
-      "Actions": [
+      "Name": "AudioAppPerformance",
+      "Actions" : [
         {
-          "Name": "JoinCgroup",
-          "Params":
+          "Name" : "JoinCgroup",
+          "Params" :
           {
-            "Controller": "cpuset",
-            "Path": "camera-background"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CameraProcessCapacityLower",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "camera-background/background"
-          }
-        }
-      ]
-    },
-    {
-      "Name": "CameraProcessCapacityLowest",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "camera-background/limit"
+            "Controller": "schedtune",
+            "Path": "audio-app"
           }
         }
       ]
@@ -278,6 +260,19 @@
       ]
     },
     {
+      "Name": "VMCompilationPerformance",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "cpu",
+            "Path": "system"
+          }
+        }
+      ]
+    },
+    {
       "Name": "CpuPolicySpread",
       "Actions": [
         {
@@ -303,7 +298,6 @@
         }
       ]
     },
-
     {
       "Name": "VrKernelCapacity",
       "Actions": [
@@ -395,7 +389,6 @@
         }
       ]
     },
-
     {
       "Name": "ProcessCapacityLow",
       "Actions": [
@@ -448,21 +441,34 @@
         }
       ]
     },
-// MIUI ADD: Performance_SpeedUI
+
     {
-      "Name": "ProcessCapacityUI",
+      "Name": "CpuSetHBackground",
       "Actions": [
         {
           "Name": "JoinCgroup",
           "Params":
-          {
-            "Controller": "cpuset",
-            "Path": "ui"
-          }
+            {
+              "Controller": "cpuset",
+              "Path": "h-background"
+            }
         }
       ]
     },
-// END Performance_SpeedUI
+    {
+      "Name": "CpuSetLBackground",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+            {
+              "Controller": "cpuset",
+              "Path": "l-background"
+            }
+        }
+      ]
+    },
+
     {
       "Name": "ServiceCapacityLow",
       "Actions": [
@@ -489,7 +495,6 @@
         }
       ]
     },
-
     {
       "Name": "CameraServiceCapacity",
       "Actions": [
@@ -504,6 +509,135 @@
       ]
     },
     {
+      "Name": "AudioAppCapacity",
+      "Actions" : [
+        {
+          "Name" : "JoinCgroup",
+          "Params" :
+          {
+            "Controller": "cpuset",
+            "Path": "audio-app"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "BlkIoLBackground",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": "l-background"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqGroupIdle",
+            "Value": "0",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqWeight",
+            "Value": "800",
+            "Optional": "true"
+          }
+        }
+      ]
+    },
+    {
+      "Name": "BlkIoHBackground",
+      "Actions": [
+        {
+          "Name": "JoinCgroup",
+          "Params":
+          {
+            "Controller": "blkio",
+            "Path": "h-background"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqGroupIdle",
+            "Value": "0",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqWeight",
+            "Value": "1000",
+            "Optional": "true"
+          }
+        }
+      ]
+    },
+
+    {
+      "Name": "BlkIOForeground",
+      "Actions" : [
+        {
+          "Name" : "JoinCgroup",
+          "Params" :
+          {
+            "Controller": "blkio",
+            "Path": ""
+          }
+        }
+      ]
+    },
+    {
+      "Name": "BlkIOBackground",
+      "Actions" : [
+        {
+          "Name" : "JoinCgroup",
+          "Params" :
+          {
+            "Controller": "blkio",
+            "Path": "bg"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "BfqWeight",
+            "Value": "10",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqGroupIdle",
+            "Value": "0",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqWeight",
+            "Value": "200",
+            "Optional": "true"
+          }
+        }
+      ]
+    },
+    {
       "Name": "LowIoPriority",
       "Actions": [
         {
@@ -512,6 +646,33 @@
           {
             "Controller": "blkio",
             "Path": "background"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "BfqWeight",
+            "Value": "10",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqGroupIdle",
+            "Value": "0",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqWeight",
+            "Value": "200",
+            "Optional": "true"
           }
         }
       ]
@@ -526,6 +687,33 @@
             "Controller": "blkio",
             "Path": ""
           }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "BfqWeight",
+            "Value": "100",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqGroupIdle",
+            "Value": "0",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqWeight",
+            "Value": "1000",
+            "Optional": "true"
+          }
         }
       ]
     },
@@ -538,6 +726,33 @@
           {
             "Controller": "blkio",
             "Path": ""
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "BfqWeight",
+            "Value": "100",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqGroupIdle",
+            "Value": "0",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqWeight",
+            "Value": "1000",
+            "Optional": "true"
           }
         }
       ]
@@ -552,10 +767,36 @@
             "Controller": "blkio",
             "Path": ""
           }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "BfqWeight",
+            "Value": "100",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqGroupIdle",
+            "Value": "0",
+            "Optional": "true"
+          }
+        },
+        {
+          "Name": "SetAttribute",
+          "Params":
+          {
+            "Name": "CfqWeight",
+            "Value": "1000",
+            "Optional": "true"
+          }
         }
       ]
     },
-
     {
       "Name": "TimerSlackHigh",
       "Actions": [
@@ -580,7 +821,6 @@
         }
       ]
     },
-
     {
       "Name": "SFMainPolicy",
       "Actions": [
@@ -589,7 +829,7 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "system-background"
+            "Path": "sf"
           }
         }
       ]
@@ -602,12 +842,11 @@
           "Params":
           {
             "Controller": "cpuset",
-            "Path": "system-background"
+            "Path": "sf"
           }
         }
       ]
     },
-
     {
       "Name": "PerfBoost",
       "Actions": [
@@ -634,7 +873,6 @@
         }
       ]
     },
-
     {
       "Name": "LowMemoryUsage",
       "Actions": [
@@ -652,7 +890,6 @@
           {
             "Name": "MemSwappiness",
             "Value": "150"
-
           }
         }
       ]
@@ -690,24 +927,8 @@
           }
         }
       ]
-    },
-    // MIUI ADD: Performance_MemoryEnhance
-    {
-      "Name": "MemoryFreezeProcess",
-      "Actions": [
-        {
-          "Name": "JoinCgroup",
-          "Params":
-          {
-            "Controller": "memory",
-            "Path": "freeze-app"
-          }
-        }
-      ]
     }
-    // END Performance_MemoryEnhance
   ],
-
   "AggregateProfiles": [
     {
       "Name": "SCHED_SP_DEFAULT",
@@ -737,12 +958,6 @@
       "Name": "SCHED_SP_RT_APP",
       "Profiles": [ "RealtimePerformance", "MaxIoPriority", "TimerSlackNormal" ]
     },
-// MIUI ADD: Performance_SpeedUI
-    {
-      "Name": "SCHED_SP_UI",
-      "Profiles": [ "UiPerformance" ]
-    },
-// END Performance_SpeedUI
     {
       "Name": "CPUSET_SP_DEFAULT",
       "Profiles": [ "TimerSlackNormal" ]
@@ -773,30 +988,19 @@
     },
     {
       "Name": "Dex2OatBackground",
-      "Profiles": [ "Dex2OatBootComplete" ]
+      "Profiles": [ "HighEnergySaving", "ProcessCapacityLow", "LowIoPriority", "TimerSlackHigh" ]
     },
     {
       "Name": "OtaProfiles",
       "Profiles": [ "ServiceCapacityLow", "LowIoPriority", "HighEnergySaving" ]
     },
     {
-      "Name": "CPUSET_SP_CAMERA_BACKGROUND",
-      "Profiles": [ "CameraProcessCapacityLow"]
+      "Name": "CPUSET_SP_LBACKGROUND",
+      "Profiles": [ "CpuSetLBackground", "BlkIoLBackground"]
     },
     {
-      "Name": "CPUSET_SP_CAMERA_LOWER_BACKGROUND",
-      "Profiles": [ "CameraProcessCapacityLower"]
-    },
-    {
-      "Name": "CPUSET_SP_CAMERA_LIMIT_BACKGROUND",
-      "Profiles": [ "HighEnergySaving", "CameraProcessCapacityLowest", "LowIoPriority", "TimerSlackHigh" ]
-// MIUI MOD: Performance_SpeedUI
-//  }
-    },
-    {
-      "Name": "CPUSET_SP_UI",
-      "Profiles": [ "ProcessCapacityUI", "UiPerformance" ]
+      "Name": "CPUSET_SP_HBACKGROUND",
+      "Profiles": [ "CpuSetHBackground", "BlkIoHBackground"]
     }
-// END Performance_SpeedUI
   ]
 }
