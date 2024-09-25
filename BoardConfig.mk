@@ -82,7 +82,7 @@ BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 67108864
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_SUPER_PARTITION_SIZE := 9126805504 # TODO: Fix hardcoded value
 BOARD_SUPER_PARTITION_GROUPS := oplus_dynamic_partitions
-BOARD_OPLUS_DYNAMIC_PARTITIONS_PARTITION_LIST := system vendor product system_ext odm vendor_dlkm odm_dlkm
+BOARD_OPLUS_DYNAMIC_PARTITIONS_PARTITION_LIST := system system_ext product vendor odm vendor_dlkm odm_dlkm
 BOARD_OPLUS_DYNAMIC_PARTITIONS_SIZE := 9122611200 # TODO: Fix hardcoded value
 
 # File systems
