@@ -8,3 +8,4 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 ```
+git clone https://github.com/User69-horny/device_oplus_ossi.git -b staging device/oplus/ossi
