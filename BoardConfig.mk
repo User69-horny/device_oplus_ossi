@@ -76,6 +76,7 @@ AB_OTA_PARTITIONS += \
     product \
     vbmeta_vendor \
     vendor_dlkm \
+    vendor_boot \
     vendor
 
 # Architecture
